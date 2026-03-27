@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teach AI</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+h1 { text-align: center; font-size: 24px; }
+input, textarea, button {
+    padding: 12px;
+    font-size: 18px;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+button {
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover { background-color: #666; }
+</style>
+</head>
+<body>
+
+<h1>AI শেখাও</h1>
+
+<input type="text" id="question" placeholder="প্রশ্ন লিখুন">
+<textarea id="answer" placeholder="উত্তর লিখুন" rows="4"></textarea>
+<button onclick="teachAI()">শেখাও</button>
+<button onclick="goChat()">চ্যাট পেজে যাও</button>
+
+<script>
+function teachAI(){
+    const question = document.getElementById('question').value;
+    const answer = document.getElementById('answer').value;
+    if(!question || !answer) return;
+    fetch('/teach', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `question=${encodeURIComponent(question)}&answer=${encodeURIComponent(answer)}`
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message));
+    document.getElementById('question').value = '';
+    document.getElementById('answer').value = '';
+}
+
+function goChat(){
+    window.location.href = '/';
+}
+</script>
+
+</body>
+</html>

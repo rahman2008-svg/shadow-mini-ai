@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Mini AI Chat</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+h1 { text-align: center; font-size: 24px; }
+#chatbox {
+    border: 2px solid #444;
+    padding: 10px;
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+input, button {
+    padding: 12px;
+    font-size: 18px;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+button {
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover { background-color: #666; }
+</style>
+</head>
+<body>
+
+<h1>Shadow Mini AI Chat</h1>
+<div id="chatbox"></div>
+
+<input type="text" id="question" placeholder="প্রশ্ন লিখুন...">
+<button onclick="askAI()">প্রশ্ন করো</button>
+<button onclick="goTeach()">AI শেখাও</button>
+
+<script>
+function appendMessage(sender, text){
+    const chatbox = document.getElementById('chatbox');
+    chatbox.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function askAI(){
+    const question = document.getElementById('question').value;
+    if(!question) return;
+    appendMessage("User", question);
+    fetch('/ask', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `question=${encodeURIComponent(question)}`
+    })
+    .then(res => res.json())
+    .then(data => appendMessage("AI", data.answer));
+    document.getElementById('question').value = '';
+}
+
+function goTeach(){
+    window.location.href = '/teach';
+}
+</script>
+
+</body>
+</html>
