@@ -12,15 +12,18 @@
     <div id="chat-box"></div>
     <input type="text" id="user-msg" placeholder="আপনার প্রশ্ন লিখুন...">
     <button onclick="sendMessage()">Send</button>
+    <br><br>
+    <a href="/teach">AI কে শেখান</a>
 </div>
 
 <script>
 async function sendMessage() {
     const msg = document.getElementById('user-msg').value;
+    if(!msg) return;
     const response = await fetch('/chat', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({user_id: 'user1', message: msg})
+        body: JSON.stringify({user_id: 'default', message: msg})
     });
     const data = await response.json();
     const chatBox = document.getElementById('chat-box');

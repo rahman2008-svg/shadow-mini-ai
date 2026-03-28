@@ -3,73 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/style.css">
 <title>Shadow Mini AI Chat</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-}
-h1 { text-align: center; font-size: 24px; }
-#chatbox {
-    border: 2px solid #444;
-    padding: 10px;
-    height: 400px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    font-size: 18px;
-}
-input, button {
-    padding: 12px;
-    font-size: 18px;
-    margin: 5px 0;
-    width: 100%;
-    box-sizing: border-box;
-}
-button {
-    background-color: #444;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-button:hover { background-color: #666; }
-</style>
 </head>
 <body>
-
-<h1>Shadow Mini AI Chat</h1>
-<div id="chatbox"></div>
-
-<input type="text" id="question" placeholder="প্রশ্ন লিখুন...">
-<button onclick="askAI()">প্রশ্ন করো</button>
-<button onclick="goTeach()">AI শেখাও</button>
+<div class="chat-container">
+    <h1>Shadow Mini AI</h1>
+    <div id="chat-box" class="chat-box"></div>
+    <div class="input-group">
+        <input type="text" id="user-msg" placeholder="আপনার প্রশ্ন লিখুন...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <p class="link"><a href="/teach">শিখাতে যেতে এখানে ক্লিক করুন</a></p>
+</div>
 
 <script>
-function appendMessage(sender, text){
-    const chatbox = document.getElementById('chatbox');
-    chatbox.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
-    chatbox.scrollTop = chatbox.scrollHeight;
-}
+async function sendMessage() {
+    const msgInput = document.getElementById('user-msg');
+    const msg = msgInput.value.trim();
+    if(!msg) return;
+    appendMessage('আপনি', msg);
+    msgInput.value = '';
 
-function askAI(){
-    const question = document.getElementById('question').value;
-    if(!question) return;
-    appendMessage("User", question);
-    fetch('/ask', {
+    const response = await fetch('/chat', {
         method: 'POST',
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `question=${encodeURIComponent(question)}`
-    })
-    .then(res => res.json())
-    .then(data => appendMessage("AI", data.answer));
-    document.getElementById('question').value = '';
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({user_id: 'default', message: msg})
+    });
+    const data = await response.json();
+    typeMessage('AI', data.reply);
 }
 
-function goTeach(){
-    window.location.href = '/teach';
+function appendMessage(sender, text) {
+    const chatBox = document.getElementById('chat-box');
+    const p = document.createElement('p');
+    p.innerHTML = `<b>${sender}:</b> ${text}`;
+    chatBox.appendChild(p);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function typeMessage(sender, text) {
+    const chatBox = document.getElementById('chat-box');
+    const p = document.createElement('p');
+    let i = 0;
+    p.innerHTML = `<b>${sender}:</b> `;
+    chatBox.appendChild(p);
+
+    const interval = setInterval(() => {
+        if(i < text.length){
+            p.innerHTML += text[i];
+            i++;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } else {
+            clearInterval(interval);
+        }
+    }, 20); // টাইপিং স্পিড
 }
 </script>
-
 </body>
 </html>

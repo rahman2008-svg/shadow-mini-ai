@@ -11,18 +11,21 @@
     <h1>Teach Shadow Mini AI</h1>
     <input type="text" id="question" placeholder="প্রশ্ন লিখুন">
     <input type="text" id="answer" placeholder="উত্তর লিখুন">
-    <button onclick="teachAI()">Teach</button>
+    <button onclick="teachAI()">শেখান</button>
     <div id="result"></div>
+    <br>
+    <a href="/">চ্যাটে ফিরে যান</a>
 </div>
 
 <script>
 async function teachAI() {
     const q = document.getElementById('question').value;
     const a = document.getElementById('answer').value;
+    if(!q || !a) return alert("প্রশ্ন এবং উত্তর অবশ্যই দিতে হবে!");
     const response = await fetch('/teach', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({question: q, answer: a, user_id:'admin'})
+        body: JSON.stringify({question: q, answer: a})
     });
     const data = await response.json();
     document.getElementById('result').innerText = data.message;
