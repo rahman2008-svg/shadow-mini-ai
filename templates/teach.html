@@ -13,15 +13,14 @@
     <input type="text" id="answer" placeholder="উত্তর লিখুন">
     <button onclick="teachAI()">শেখান</button>
     <div id="result"></div>
-    <br>
-    <a href="/">চ্যাটে ফিরে যান</a>
+    <a href="/" class="chat-link">Chat AI</a>
 </div>
 
 <script>
 async function teachAI() {
     const q = document.getElementById('question').value;
     const a = document.getElementById('answer').value;
-    if(!q || !a) return alert("প্রশ্ন এবং উত্তর অবশ্যই দিতে হবে!");
+    if(q.trim() === "" || a.trim() === "") return;
     const response = await fetch('/teach', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},

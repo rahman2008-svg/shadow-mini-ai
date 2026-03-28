@@ -13,7 +13,7 @@ def save_context(user_id, message):
     if user_id not in data:
         data[user_id] = []
     data[user_id].append(message)
-    if len(data[user_id]) > 50:  # Keep last 50 messages
+    if len(data[user_id]) > 50:
         data[user_id] = data[user_id][-50:]
     with open(CONTEXT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
