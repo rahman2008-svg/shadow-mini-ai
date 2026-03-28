@@ -1,1 +1,28 @@
-{"qa_data": [], "qa": {"1": {"question": "\u09ac\u09be\u0982\u09b2\u09be\u09a6\u09c7\u09b6\u09c7\u09b0 \u09b0\u09be\u099c\u09a7\u09be\u09a8\u09c0\u09b0 \u09a8\u09be\u09ae \u0995\u09bf", "answer": "\u09ac\u09be\u0982\u09b2\u09be\u09a6\u09c7\u09b6\u09c7\u09b0 \u09b0\u09be\u099c\u09a7\u09be\u09a8\u09c0\u09b0 \u09a8\u09be\u09ae \u09a2\u09be\u0995\u09be"}}}
+{
+    "qa_data": [
+        {
+            "question": "বাংলাদেশের রাজধানীর নাম কি ",
+            "answer": "বাংলাদেশের রাজধানীর নাম ঢাকা ",
+            "language": "bangla"
+        },
+        {
+            "question": "বাংলাদেশের রাজধানীর নাম কি ",
+            "answer": "বাংলাদেশের রাজধানীর নাম ঢাকা ",
+            "language": "bangla",
+            "added_by": "admin"
+        }
+    ],
+    "qa": {
+        "1": {
+            "question": "বাংলাদেশের রাজধানীর নাম কি ",
+            "answer": "বাংলাদেশের রাজধানীর নাম ঢাকা ",
+            "language": "bangla"
+        },
+        "2": {
+            "question": "বাংলাদেশের রাজধানীর নাম কি ",
+            "answer": "বাংলাদেশের রাজধানীর নাম ঢাকা ",
+            "language": "bangla",
+            "added_by": "admin"
+        }
+    }
+}

@@ -1,25 +1,6 @@
-from tinydb import TinyDB, Query
+from memory import add_to_memory
+from brain import get_answer
 
-db = TinyDB('memory.json')
-qa_table = db.table('qa')
-Question = Query()
-
-def add_to_memory(question, answer):
-    existing = qa_table.search(Question.question == question)
-    if existing:
-        qa_table.update({'answer': answer}, Question.question == question)
-    else:
-        qa_table.insert({'question': question, 'answer': answer})
-
-def get_best_answer(user_question):
-    all_qas = qa_table.all()
-    if not all_qas:
-        return "আমি এখনো এটি শিখিনি।"
-
-    for qa in all_qas:
-        if qa['question'].lower() == user_question.lower():
-            return qa['answer']
-
-    # Auto-learn: নতুন প্রশ্ন সেভ হবে "আমি এখনো এটি শিখিনি।"
-    add_to_memory(user_question, "আমি এখনো এটি শিখিনি।")
-    return "আমি এখনো এটি শিখিনি।"
+def teach_ai(question, answer, user_id="admin", language="bangla"):
+    add_to_memory(question, answer, user_id, language)
+    return f"শিখানো হয়েছে: {question} -> {answer}"

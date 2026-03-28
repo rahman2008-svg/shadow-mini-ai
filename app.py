@@ -1,53 +1,43 @@
 from flask import Flask, render_template, request, jsonify
-from utils import add_to_memory, get_best_answer
+from utils import teach_ai
+from brain import get_answer
+from context import save_context, get_context
 
 app = Flask(__name__)
 
-# -------------------
-# Home Page (Chat)
-# -------------------
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template("index.html")  # Chat পেজ
+    return render_template("index.html")
 
-# -------------------
-# Teach Page
-# -------------------
-@app.route('/teach')
+@app.route("/teach")
+def teach_page():
+    return render_template("teach.html")
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_msg = data.get("message")
+    user_id = data.get("user_id", "default")
+    
+    save_context(user_id, user_msg)
+    context = get_context(user_id)
+    answer = get_answer(user_msg)
+    
+    if answer:
+        reply = answer
+    else:
+        reply = "আমি এখনো এটা শিখিনি 😅"
+    
+    return jsonify({"reply": reply})
+
+@app.route("/teach", methods=["POST"])
 def teach():
-    return render_template("teach.html")  # Teach AI পেজ
-
-# -------------------
-# Ask AI (Chat) Route
-# -------------------
-@app.route('/ask', methods=['POST'])
-def ask_ai():
     data = request.get_json()
-    question = data.get('question')
-    if not question:
-        return jsonify({"answer": "প্রশ্ন পাঠানো হয়নি!"})
-    
-    answer = get_best_answer(question)
-    return jsonify({"answer": answer})
+    question = data.get("question")
+    answer = data.get("answer")
+    user_id = data.get("user_id", "admin")
+    response = teach_ai(question, answer, user_id)
+    return jsonify({"status": "success", "message": response})
 
-# -------------------
-# Teach AI Route
-# -------------------
-@app.route('/teach_ai', methods=['POST'])
-def teach_ai():
-    data = request.get_json()
-    question = data.get('question')
-    answer = data.get('answer')
-    
-    if not question or not answer:
-        return jsonify({"status": "error", "message": "প্রশ্ন বা উত্তর পাঠানো হয়নি"})
-    
-    add_to_memory(question, answer)
-    return jsonify({"status": "success", "message": "AI শেখানো হয়েছে!"})
-
-# -------------------
-# Run Server
-# -------------------
 if __name__ == "__main__":
-    # মোবাইল বা Termux এ চলার জন্য host 0.0.0.0
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)
